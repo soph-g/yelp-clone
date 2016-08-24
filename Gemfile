@@ -33,10 +33,12 @@ gem 'devise'
 gem 'omniauth-facebook'
 
 
+
 group :test do
   gem 'rspec-rails'
   gem 'capybara'
   gem 'rspec-collection_matchers'
+  gem 'pry-rails'
 end
 
 group :development, :test do

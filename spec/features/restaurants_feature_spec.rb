@@ -12,28 +12,31 @@ feature 'restaurants' do
 
   context 'restaurants have been added' do
     before do
-      Restaurant.create(name: 'KFC')
+      User.create(email: "test@test.com", password: "123456")
+      Restaurant.create(name: 'KFC', description: "Terrible, never go here", user_id: User.first.id)
     end
     scenario 'display restaurants' do
       visit '/restaurants'
       expect(page).to(have_content("KFC"))
       expect(page).not_to(have_content("No restaurants yet"))
     end
-  end
-
-  context 'viewing restaurants' do
-    let!(:kfc) { Restaurant.create(name: 'KFC', description: 'Terrible, never go here') }
 
     scenario 'lets a user view a restaurant' do
       visit '/restaurants'
       click_link 'KFC'
       expect(page).to(have_content('KFC'))
       expect(page).to(have_content('Terrible, never go here'))
-      expect(current_path).to(eq("/restaurants/#{kfc.id}"))
+      expect(current_path).to(eq("/restaurants/#{Restaurant.last.id}"))
     end
+
   end
 
   context "user is not logged in" do
+
+    before do
+      User.create(email: "test@test.com", password: "123456")
+      Restaurant.create(name: 'KFC', description: "Terrible, never go here", user_id: User.first.id)
+    end
 
     context 'creating restaurants' do
       scenario 'prompts user to fill out a form, then displays the new restaurant' do
@@ -44,9 +47,7 @@ feature 'restaurants' do
     end
 
     context 'editing restaurants' do
-      before { Restaurant.create name: 'KFC', description: 'Awful, just terrible' }
-
-      scenario 'let a user edit a restaurant' do
+      scenario 'do not let a user edit a restaurant' do
         visit '/restaurants'
         click_link 'Edit KFC'
         expect(page).to(have_content('Log in'))
@@ -54,9 +55,7 @@ feature 'restaurants' do
     end
 
     context 'deleting restaurants' do
-      before { Restaurant.create name: 'KFC', description: 'Deep fried goodness'}
-
-      scenario 'removes a restaurant when a user clicks delete' do
+      scenario 'user cannot delete a restaurant when not logged in' do
         visit '/restaurants'
         click_link 'Delete KFC'
         expect(page).to(have_content('Log in'))
@@ -69,12 +68,7 @@ feature 'restaurants' do
   context "user is logged in" do
 
     before do
-    visit("/")
-    click_link("Sign up")
-    fill_in("Email", with: "test@example.com")
-    fill_in("Password", with: "testtest")
-    fill_in("Password confirmation", with: "testtest")
-    click_button("Sign up")
+      sign_up
     end
 
     context 'creating restaurants' do
@@ -123,7 +117,10 @@ feature 'restaurants' do
       end
 
       context 'editing a restaurant not created by the user' do
-        before { Restaurant.create name: 'KFC', description: 'Awful, just terrible' }
+        before do
+          User.create(email: "test@test.com", password: "123456")
+          Restaurant.create(name: 'KFC', description: "Terrible, never go here", user_id: User.first.id)
+        end
 
         scenario 'a user cannot edit a restaurant they have not created' do
           visit '/restaurants'
@@ -153,7 +150,10 @@ feature 'restaurants' do
       end
 
       context 'a user cannot delete a restaurant they did not create' do
-        before { Restaurant.create name: 'KFC', description: 'Deep fried goodness'}
+        before do
+          User.create(email: "test@test.com", password: "123456")
+          Restaurant.create(name: 'KFC', description: "Terrible, never go here", user_id: User.first.id)
+        end
 
         scenario 'removes a restaurant when a user clicks delete' do
           visit '/restaurants'
