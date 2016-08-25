@@ -50,16 +50,14 @@ feature 'restaurants' do
     context 'editing restaurants' do
       scenario 'do not let a user edit a restaurant' do
         visit '/restaurants'
-        click_link 'Edit KFC'
-        expect(page).to(have_content('Log in'))
+        expect(page).not_to(have_link('Edit KFC'))
       end
     end
 
     context 'deleting restaurants' do
       scenario 'user cannot delete a restaurant when not logged in' do
         visit '/restaurants'
-        click_link 'Delete KFC'
-        expect(page).to(have_content('Log in'))
+        expect(page).not_to(have_link('Delete KFC'))
       end
     end
 
@@ -120,7 +118,7 @@ feature 'restaurants' do
       context 'editing a restaurant not created by the user' do
         before do
           User.create(email: "test@test.com", password: "123456")
-          Restaurant.create(name: 'KFC', description: "Terrible, never go here", user_id: User.first.id)
+          Restaurant.create(name: 'KFC', description: "Terrible, never go here", user_id: User.last.id)
         end
 
         scenario 'a user cannot edit a restaurant they have not created' do
@@ -153,7 +151,7 @@ feature 'restaurants' do
       context 'a user cannot delete a restaurant they did not create' do
         before do
           User.create(email: "test@test.com", password: "123456")
-          Restaurant.create(name: 'KFC', description: "Terrible, never go here", user_id: User.first.id)
+          Restaurant.create(name: 'KFC', description: "Terrible, never go here", user_id: User.last.id)
         end
 
         scenario 'removes a restaurant when a user clicks delete' do

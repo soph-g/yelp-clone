@@ -5,18 +5,23 @@
       <h3> Reviews: </h3>
       <% restaurant.reviews.each do |review| %>
         <%= review.thoughts %> <br>
-        <%= "This restaurant has a rating of #{review.rating} out of 5" %> <br>
+        <%= "Review rating: #{review.rating} out of 5" %>
+        <%= link_to "Endorse Review", review_endorsements_path(review), method: :post %>
+        <p><%= pluralize review.endorsements.count, 'endorsement' %></p><br>
       <% end %>
     <% end %>
-    <%= link_to "Edit #{restaurant.name}", edit_restaurant_path(restaurant) %>
-    <%= link_to "Delete #{restaurant.name}", restaurant_path(restaurant), method: :delete %>
-    <%= link_to "Review #{restaurant.name}", new_restaurant_review_path(restaurant) %>
-  <% end %>
+    <h2>Average Rating: <%= restaurant.average_rating %></h2>
+
+      <%if current_user %>
+        <% if restaurant.user_id == current_user.id %>
+          <%= link_to "Edit #{restaurant.name}", edit_restaurant_path(restaurant) %>
+          <%= link_to "Delete #{restaurant.name}", restaurant_path(restaurant), method: :delete %>
+        <% end %>
+        <%= link_to "Review #{restaurant.name}", new_restaurant_review_path(restaurant) %>
+      <% end %>
+    <% end %>
 <% else %>
   <h1>No restaurants yet</h1>
 <%end%>
-
-
-
-
-<a href='restaurants/new'>Add a restaurant</a>
+<div></div>
+<br><a href='restaurants/new'>Add a restaurant</a>

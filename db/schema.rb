@@ -10,10 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160824141955) do
+ActiveRecord::Schema.define(version: 20160825144804) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "endorsements", force: :cascade do |t|
+    t.integer  "review_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["review_id"], name: "index_endorsements_on_review_id", using: :btree
+  end
 
   create_table "restaurants", force: :cascade do |t|
     t.string   "name"
@@ -55,6 +62,7 @@ ActiveRecord::Schema.define(version: 20160824141955) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
+  add_foreign_key "endorsements", "reviews"
   add_foreign_key "restaurants", "users"
   add_foreign_key "reviews", "restaurants"
   add_foreign_key "reviews", "users"

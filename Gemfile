@@ -39,6 +39,8 @@ group :test do
   gem 'capybara'
   gem 'rspec-collection_matchers'
   gem 'pry-rails'
+  gem 'poltergeist'
+  gem 'database_cleaner'
 end
 
 group :development, :test do
