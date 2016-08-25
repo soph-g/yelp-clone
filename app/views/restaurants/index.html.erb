@@ -1,14 +1,19 @@
 <% if @restaurants.any? %>
   <% @restaurants.each do |restaurant| %>
     <h2><%= link_to restaurant.name, restaurant_path(restaurant) %></h2>
+    <p> <%= restaurant.description %> </p>
+    <% if restaurant.image_file_name %>
+      <%= image_tag restaurant.image.url(:thumb) %>
+    <% end %>
     <% if restaurant.reviews.any? %>
       <h3> Reviews: </h3>
       <% restaurant.reviews.each do |review| %>
-        <%= review.thoughts %> <br>
+        <li>
+        <%= review.thoughts %> <br><br>
         <%= "Review rating: #{review.rating} out of 5" %>
         <%= link_to "Endorse Review", review_endorsements_path(review), class: 'endorsements-link' %>
-        <span class='endorsements_count'> <%= review.endorsements.count %> </span>
-        <p><%= 'endorsement'.pluralize(review.endorsements.count) %></p><br>
+        <span class='endorsements_count'> <%= review.endorsements.count %> </span> <%= 'endorsement'.pluralize(review.endorsements.count) %><br>
+      </li><br>
       <% end %>
     <% end %>
     <h2>Average Rating: <%= restaurant.average_rating %></h2>

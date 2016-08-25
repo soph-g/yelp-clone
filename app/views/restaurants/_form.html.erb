@@ -1,7 +1,8 @@
-<%= form_for @restaurant do |field| %>
+<%= form_for @restaurant, html: { multipart: true } do |field| %>
   <%= field.label :name %>
   <%= field.text_field :name %>
   <%= field.label :description %>
   <%= field.text_field :description %>
+  <%= field.file_field :image %>
   <%= field.submit %>
 <% end %>
